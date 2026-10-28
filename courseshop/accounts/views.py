@@ -6,17 +6,21 @@ from datetime import timedelta
 
 from django.forms.models import BaseModelForm
 from django.http import HttpResponse
-from django.views.generic import FormView, View, UpdateView
-from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
+from django.views.generic import FormView, View, UpdateView, ListView, TemplateView
+from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils import timezone
+from django.http import Http404
+
+from azbankgateways import models as bank_models, default_settings as settings, bankfactories
 
 from formtools.wizard.views import SessionWizardView
 
 from .forms import *
-from .models import User
+from .models import User, Subscription
 
 
 class LoginView(FormView):
@@ -97,4 +101,41 @@ class ChangePasswordView(LoginRequiredMixin, FormView):
         messages.error(self.request, "Invalid form values.")
         response = super().form_invalid(form)
         return response
+
+
+class SubscriptionListView(LoginRequiredMixin, ListView):
+    model = Subscription
+    queryset = Subscription.objects.all()
+    template_name = "subscription_list.html"
+
+
+class CallbackGatewayView(TemplateView):
+    template_name = 'callback_gateway.html'
+
+    def get(self, request):
+        tracking_code = request.GET.get(settings.TRACKING_CODE_QUERY_PARAM, None)
+        if not tracking_code:
+            raise Http404
     
+        try:
+            bank_record = bank_models.Bank.objects.get(tracking_code=tracking_code)
+        except bank_models.Bank.DoesNotExist:
+            raise Http404
+    
+        if bank_record.is_success:
+            return render(request, self.template_name, context={ 'message': "پرداخت با موفقیت انجام شد." })
+    
+        return render(request, self.template_name, context={ 'message': "پرداخت با شکست مواجه شده است. اگر پول کم شده است ظرف مدت ۴۸ ساعت پول به حساب شما بازخواهد گشت." })
+
+
+class BuySubscriptionView(View):
+    def get(self, request, pk):
+        sub = Subscription.objects.get(pk=pk)
+        factory = bankfactories.BankFactory()
+        bank = factory.create()
+        bank.set_request(request)
+        bank.set_amount(sub.price)
+        bank.set_client_callback_url(reverse('callback-gateway'))
+        bank.ready()
+    
+        return bank.redirect_gateway()

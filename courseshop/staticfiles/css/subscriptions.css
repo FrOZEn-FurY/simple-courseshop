@@ -1,0 +1,20 @@
+.subscripton {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border-radius: 25px;
+    border: 1px solid black;
+    padding: 0.25rem;
+}
+
+.sub {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    border-bottom: 1px solid black;
+    padding: 0.25rem;
+}
+
+.sub:last-child {
+    border-bottom: none;
+}

@@ -29,4 +29,5 @@ def send_otp(phone_number):
         "Accept": "application/json",
         "X-API-KEY": os.getenv("SMS_PANEL_API_KEY", None)
     }
-    # response = requests.post(url, json=data, headers=headers)
+    response = requests.post(url, json=data, headers=headers)
+    return response

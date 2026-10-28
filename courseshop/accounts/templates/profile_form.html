@@ -15,5 +15,7 @@
     {% if time_remaining %}
         <div>{{ time_remaining }} از اشتراک شما باقی مانده</div>
         <div>نوع اشتراک: {{ request.user.subscription.title }}</div>
+    {% else %}
+        <div>شما اشتراک فعالی ندارید. <a href="{% url 'subscriptions' %}">خرید اشتراک</a></div>
     {% endif %}
 {% endblock content %}

@@ -9,7 +9,7 @@ from django.utils import timezone
 from datetime import timedelta
 
 from .models import *
-from .send_otp import send_otp
+from .utils import send_otp
 
 from phonenumber_field.formfields import PhoneNumberField
 

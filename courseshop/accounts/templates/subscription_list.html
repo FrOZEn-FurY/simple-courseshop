@@ -1,14 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
 {% block head %}
     <link href="{% static 'css/subscriptions.css' %}" rel="stylesheet" />
 {% endblock head %}
 
 {% block content %}
     <div class="subscriptions">
-        {% for sub in subscriptions %}
+        {% for sub in object_list %}
             <div class="sub">
-                <div>{{ sub.title }}</div>
-                <div>{{ sub.duration }}</div>
-                <div>{{ sub.price }}</div>
+                <div>نام: {{ sub.title }}</div>
+                <div>مدت: {{ sub.duration }} روز</div>
+                <div>قیمت: {{ sub.price }} ریال</div>
+                <a href="{% url 'buy-subscription' sub.pk %}">خرید اشتراک</a>
             </div>
         {% empty %}
             <div>No items to be shown.</div>

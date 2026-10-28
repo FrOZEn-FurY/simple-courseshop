@@ -159,3 +159,15 @@ CKEDITOR_UPLOAD_PATH = "uploads/"
 
 SITE_ID = 1
 DEFAULT_PROTOCOL = "http"
+
+AZ_IRANIAN_BANK_GATEWAYS = {
+   'GATEWAYS': {
+       'MELLAT': {
+           'TERMINAL_CODE': '5654651566515',
+           'USERNAME': '57578587',
+           'PASSWORD': '785785785',
+       },
+   },
+   'DEFAULT': 'MELLAT',
+   'CURRENCY': 'IRR',
+}
