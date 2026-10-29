@@ -1,69 +1,297 @@
-#Category a {
-    text-decoration: none;
-    color: black;
-    padding: 3px;
-    font-size: 20px;
+
+/* ========================================
+   1. Page layout
+======================================== */
+
+.page-section {
+    width: 100%;
+    max-width: 920px;
+    margin-inline: auto;
 }
 
-#Category a:hover {
-    transition: color 0.3s ease;
-    color: darkgray;
+.page-heading {
+    margin-bottom: 24px;
 }
+
+.page-title {
+    margin: 0;
+
+    color: var(--color-text);
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.page-description {
+    margin: 8px 0 0;
+
+    color: var(--color-text-muted);
+    font-size: 14px;
+}
+
+
+/* ========================================
+   2. Breadcrumb navigation
+======================================== */
 
 .breadcrumb {
-    background-color: saddlebrown;
-    padding: 2px 8px;
-    vertical-align: center;
-    border-radius: 25px;
+    margin-bottom: 28px;
 }
 
-.breadcrumb a {
-    text-decoration: none;
-    color: limegreen;
-    padding: 2px;
+.breadcrumb-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
 }
 
-.breadcrumb a:hover {
-    transition: color 0.3s ease-in-out;
-    color: darkolivegreen;
+.breadcrumb-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    color: var(--color-text-muted);
+    font-size: 13px;
 }
 
-#Current-page {
-    color: cadetblue;
+.breadcrumb-item:not(:last-child)::after {
+    content: "/";
+    color: #b4bac8;
 }
 
-.breadcrumb {
-    background-color: saddlebrown;
-    padding: 2px 8px;
-    vertical-align: center;
-    border-radius: 25px;
+.breadcrumb-item a {
+    color: var(--color-text-muted);
+
+    transition: color var(--transition-fast);
 }
 
-.breadcrumb a {
-    text-decoration: none;
-    color: limegreen;
-    padding: 2px;
+.breadcrumb-item a:hover {
+    color: var(--color-primary);
 }
 
-.breadcrumb a:hover {
-    transition: color 0.3s ease-in-out;
-    color: darkolivegreen;
+.breadcrumb-item.active {
+    color: var(--color-text);
+    font-weight: 600;
 }
 
-#Current-page {
-    color: cadetblue;
+
+/* ========================================
+   3. Category tree
+======================================== */
+
+.category-panel {
+    overflow: hidden;
+
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sm);
 }
 
-.list-group-item {
-    color: darkblue;
+.category-tree,
+.category-children {
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+}
+
+.category-item + .category-item {
+    border-top: 1px solid var(--color-border);
+}
+
+.category-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    min-height: 58px;
+    padding: 14px 20px;
+
+    color: var(--color-text);
+    font-size: 15px;
+    font-weight: 500;
+
+    transition:
+        color var(--transition-fast),
+        background-color var(--transition-fast);
+}
+
+.category-link:hover {
+    color: var(--color-primary);
+    background: var(--color-primary-soft);
+}
+
+.category-indicator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+
+    color: var(--color-text-muted);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.category-children {
+    margin-inline-start: 20px;
+    padding-inline-start: 12px;
+
+    border-inline-start: 2px solid var(--color-primary-soft);
+}
+
+.category-children > .category-item {
+    border-top: 1px solid var(--color-border);
+}
+
+.category-children .category-link {
+    min-height: 48px;
+    padding-block: 10px;
+    font-size: 14px;
+}
+
+
+/* ========================================
+   4. Post list
+======================================== */
+
+.post-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.post-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    min-height: 68px;
+    padding: 18px 20px;
+
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+
+    color: var(--color-text);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sm);
+
+    transition:
+        border-color var(--transition-fast),
+        background-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+}
+
+.post-card:hover {
+    border-color: #c7c9fa;
+    background: #fcfcff;
+    box-shadow: 0 3px 10px rgb(20 30 60 / 5%);
+}
+
+.post-card-title {
+    flex: 1;
+    min-width: 0;
+
+    font-size: 15px;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+}
+
+.post-card-arrow {
+    flex-shrink: 0;
+
+    color: #9ba2b3;
     font-size: 20px;
+
+    transition:
+        color var(--transition-fast),
+        transform var(--transition-fast);
 }
 
-.list-group-item:hover {
-    transition: color 0.3s ease;
-    color: deepskyblue;
+.post-card:hover .post-card-arrow {
+    color: var(--color-primary);
+    transform: translateX(-3px);
 }
 
-.premium {
-    background-color: rgba(255, 238, 56, 0.5) !important;
+
+/* ========================================
+   5. Premium posts
+======================================== */
+
+.post-card-premium {
+    border-inline-start: 3px solid #d6a23c;
+}
+
+.premium-badge {
+    flex-shrink: 0;
+
+    padding: 4px 10px;
+
+    border: 1px solid #f1dfb4;
+    border-radius: var(--radius-sm);
+
+    color: #8a6114;
+    background: #fff9e9;
+
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+
+/* ========================================
+   6. Empty state
+======================================== */
+
+.empty-state {
+    padding: 40px 24px;
+
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-lg);
+
+    text-align: center;
+    background: var(--color-surface);
+}
+
+.empty-state h2 {
+    margin: 0 0 8px;
+
+    color: var(--color-text);
+    font-size: 18px;
+}
+
+.empty-state p {
+    margin: 0;
+
+    color: var(--color-text-muted);
+    font-size: 14px;
+}
+
+
+/* ========================================
+   7. Keyboard focus
+======================================== */
+
+.category-link:focus-visible,
+.breadcrumb-item a:focus-visible,
+.post-card:focus-visible {
+    position: relative;
+    z-index: 1;
+
+    outline: 2px solid var(--color-primary);
+    outline-offset: -3px;
 }

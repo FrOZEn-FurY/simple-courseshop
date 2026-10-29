@@ -1,76 +1,207 @@
+
 {% extends 'base.html' %}
-{% load mptt_tags %}
 {% load static %}
 
-{% block head %}
-	<link href='{% static "css/post.css" %}' rel="stylesheet" />
-	<link href="{% static 'css/categories.css' %}" rel="stylesheet" />
-{% endblock head %}
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/post.css' %}">
+{% endblock %}
+
+{% block body_class %}post-detail-page{% endblock %}
 
 {% block content %}
-    <div style="--bs-breadcrumb-divider: '->';" aria-label="breadcrumb">
-		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href="{% url 'home' %}">خانه</a></li>
-			<li class="breadcrumb-item"><a href="{% url 'categories' %}">دسته بندی ها</a></li>
+    <nav class="breadcrumb" aria-label="مسیر صفحه">
+        <ol class="breadcrumb-list">
+            <li class="breadcrumb-item">
+                <a href="{% url 'home' %}">خانه</a>
+            </li>
+
+            <li class="breadcrumb-item">
+                <a href="{% url 'categories' %}">دسته‌بندی‌ها</a>
+            </li>
+
             {% for anc in ancestors %}
-			    <li class="breadcrumb-item"><a href="{{ anc.get_absolute_url }}">{{ anc.name }}</a></li>
+                <li class="breadcrumb-item">
+                    <a href="{{ anc.get_absolute_url }}">
+                        {{ anc.name }}
+                    </a>
+                </li>
             {% endfor %}
-			<li id="Current-page" class="breadcrumb-item active" aria-current="page">{{ post.title }}</li>
-		</ol>
-	</div>
-	<div class="card" style="display: inline-block; float: right;">
-		<h2 class="card-header">پست های مرتبط</h2>
-		<ul class="card-body">
-			{% for post in recent %}
-				<li>
-					<a href="{{ post.get_absolute_url }}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
-						{{ post.author }}: {{ post.title }}
-					</a>
-				</li>
-			{% endfor %}
-		</ul>
-	</div>
-	{% if liked %}
-		<a class="btn btn-danger button-link-design mb-2 position-relative" href="{% url 'add-to-favorite' post.pk %}">
-			حذف از علاقه مندی
-		</a>
-	{% else %}
-		<a class="btn btn-info button-link-design mb-2 position-relative" href="{% url 'add-to-favorite' post.pk %}">
-			افزودن به علاقه مندی
-		</a>
-	{% endif %}<br/>
-	<h2 style="display: inline-block; text-align: center; margin-left: 460px;">{{ post.title }}</h2>
-    <div class="card" style="display: inline-block; width: 65%;">
-        <p class="card-body">
-            {{ post.body|safe }}
-        </p>
-    </div><br/><br/><br/>
-	<hr/>
-	<h1 style="text-align: center;">نظر ها</h1>
-	<ul>
-		{% for comment in comments %}
-			<li class="button-link-design card"
-				style="margin-right: 20px;">
-					<h3 class="card-body">{{ comment.author }}
-						<span style="opacity: 50%; font-size: 15px;"> Updated at: {{ comment.date_updated|date:"M jS H:i:s" }}</span>
-					</h3>
-					<p class="card-text" style="padding-left: 5px;">{{ comment.body|safe }}</p>
-			</li><br/>
-		{% empty %}
-			<li class="button-link-design card"
-				style="margin-right: 20px;">
-					نظری ثبت نشده است.
-			</li><br/>
-		{% endfor %}
-	</ul>
-	<hr/>
-	<div class="button-link-design" style="text-align: center;">
-		<h2>نظر خود را ثبت کنید:</h2>
-		<form action="{% url 'add-comment' post.pk %}" method="post">
-			{% csrf_token %}
-			{{ comment_form.as_p }}
-			<input type="submit" value="ثبت نظر" />
-		</form>
-	</div>
-	<br/><br/>
+
+            <li class="breadcrumb-item active" aria-current="page">
+                {{ post.title }}
+            </li>
+        </ol>
+    </nav>
+
+    <div class="post-detail-layout">
+        <article class="article-card">
+            <header class="article-header">
+                <h1 class="article-title">{{ post.title }}</h1>
+
+                <div class="article-actions">
+                    {% if liked %}
+                        <a
+                            class="button button-danger"
+                            href="{% url 'add-to-favorite' post.pk %}"
+                        >
+                            حذف از علاقه‌مندی‌ها
+                        </a>
+                    {% else %}
+                        <a
+                            class="button button-outline"
+                            href="{% url 'add-to-favorite' post.pk %}"
+                        >
+                            افزودن به علاقه‌مندی‌ها
+                        </a>
+                    {% endif %}
+                </div>
+            </header>
+
+            <div class="article-body">
+                {{ post.body|safe }}
+            </div>
+
+            {% if files %}
+                <section class="article-media" aria-label="رسانه‌های مطلب">
+                    <h2 class="section-title">رسانه‌های مطلب</h2>
+
+                    <div class="media-list">
+                        {% for file in files %}
+                            {% if file.type == "Video" or file.type == "VIDEO" or file.type == "V" %}
+                                {% if file.video_url %}
+                                    <div class="media-item">
+                                        <div class="video-frame">
+                                            <iframe
+                                                src="{{ file.video_url }}"
+                                                title="ویدئوی مرتبط با {{ post.title }}"
+                                                loading="lazy"
+                                                referrerpolicy="strict-origin-when-cross-origin"
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                                allowfullscreen
+                                            ></iframe>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                            {% elif file.type == "Picture" or file.type == "PICTURE" or file.type == "P" %}
+                                {% if file.picture %}
+                                    <figure class="media-item">
+                                        <img
+                                            class="article-image"
+                                            src="{{ file.picture.url }}"
+                                            alt="{{ post.title }}"
+                                            loading="lazy"
+                                        >
+                                    </figure>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
+
+            <section class="comments-section">
+                <header class="section-heading">
+                    <h2 class="section-title">نظرات</h2>
+                    <span class="section-subtitle">
+                        دیدگاه خود را با دیگران به اشتراک بگذارید.
+                    </span>
+                </header>
+
+                <div class="comments-list">
+                    {% for comment in comments %}
+                        <article class="comment-card">
+                            <header class="comment-header">
+                                <h3 class="comment-author">
+                                    {{ comment.author }}
+                                </h3>
+
+                                <time class="comment-date"
+                                      datetime="{{ comment.date_updated|date:'c' }}">
+                                    آخرین ویرایش:
+                                    {{ comment.date_updated|date:"Y/m/d - H:i" }}
+                                </time>
+                            </header>
+
+                            <div class="comment-body">
+                                {{ comment.body|safe }}
+                            </div>
+                        </article>
+                    {% empty %}
+                        <div class="empty-state">
+                            <h3>هنوز نظری ثبت نشده است</h3>
+                            <p>اولین نفری باشید که دیدگاه خود را ثبت می‌کند.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section class="comment-form-section">
+                <h2 class="section-title">ثبت نظر جدید</h2>
+
+                <form
+                    class="comment-form"
+                    action="{% url 'add-comment' post.pk %}"
+                    method="post"
+                >
+                    {% csrf_token %}
+
+                    {% for field in comment_form %}
+                        <div class="form-field">
+                            {{ field.label_tag }}
+                            {{ field }}
+
+                            {% if field.help_text %}
+                                <small class="form-help">
+                                    {{ field.help_text }}
+                                </small>
+                            {% endif %}
+
+                            {% for error in field.errors %}
+                                <p class="form-error">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+
+                    {% if comment_form.non_field_errors %}
+                        <div class="form-error">
+                            {{ comment_form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <button class="button button-primary" type="submit">
+                        ثبت نظر
+                    </button>
+                </form>
+            </section>
+        </article>
+
+        <aside class="related-sidebar">
+            <section class="related-card">
+                <h2 class="related-heading">مطالب مرتبط</h2>
+
+                <ul class="related-list">
+                    {% for related_post in recent %}
+                        <li class="related-item">
+                            <a href="{{ related_post.get_absolute_url }}"
+                               class="related-link">
+                                <span class="related-author">
+                                    {{ related_post.author }}
+                                </span>
+                                <span class="related-title">
+                                    {{ related_post.title }}
+                                </span>
+                            </a>
+                        </li>
+                    {% empty %}
+                        <li class="related-empty">
+                            مطلب مرتبطی وجود ندارد.
+                        </li>
+                    {% endfor %}
+                </ul>
+            </section>
+        </aside>
+    </div>
 {% endblock content %}

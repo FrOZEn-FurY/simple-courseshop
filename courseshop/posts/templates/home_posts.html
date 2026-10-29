@@ -1,38 +1,89 @@
+
 {% extends 'base.html' %}
 {% load static %}
 
-{% block head %}
-	<link href="{% static 'css/categories.css' %}" rel="stylesheet" />
-{% endblock head %}
+{% block title %}آخرین مطالب{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/home_posts.css' %}">
+{% endblock %}
+
+{% block body_class %}home-posts-page{% endblock %}
 
 {% block content %}
-	<div class="list-group list-group-flush">
-		{% for post in object_list %}
-			<a class="list-group-item {% if post.subscription_required %} premium {% endif %}" href="{{ post.get_absolute_url }}">
-				<p>
-					{{ post.title }}
-				</p>
-			</a>
-        {% empty %}
-            No posts to be shown.
-		{% endfor %}
-	</div>
+    <section class="page-section">
+        <header class="page-heading">
+            <h1 class="page-title">مطالب</h1>
+            <p class="page-description">
+                مطالب و آموزش‌های منتشرشده را دنبال کنید.
+            </p>
+        </header>
 
-    <div class="pagination">
-        <span class="step-links">
-            {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo; first</a>
-                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-            {% endif %}
+        <div class="post-list">
+            {% for post in object_list %}
+                <a
+                    class="post-card{% if post.subscription_required %} post-card-premium{% endif %}"
+                    href="{{ post.get_absolute_url }}"
+                >
+                    <span class="post-card-title">
+                        {{ post.title }}
+                    </span>
 
-            <span class="current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-            </span>
+                    {% if post.subscription_required %}
+                        <span class="premium-badge">
+                            ویژه اعضا
+                        </span>
+                    {% endif %}
 
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">next</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-            {% endif %}
-        </span>
-    </div>
+                    <span class="post-card-arrow" aria-hidden="true">
+                        ←
+                    </span>
+                </a>
+            {% empty %}
+                <div class="empty-state">
+                    <h2>هنوز مطلبی منتشر نشده است</h2>
+                    <p>بعداً دوباره سر بزنید؛ مطالب جدید اینجا نمایش داده می‌شوند.</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+            <nav class="pagination" aria-label="صفحه‌بندی مطالب">
+                {% if page_obj.has_previous %}
+                    <a class="pagination-link"
+                       href="?page=1">
+                        ابتدا
+                    </a>
+
+                    <a class="pagination-link"
+                       href="?page={{ page_obj.previous_page_number }}">
+                        قبلی
+                    </a>
+                {% else %}
+                    <span class="pagination-link disabled">ابتدا</span>
+                    <span class="pagination-link disabled">قبلی</span>
+                {% endif %}
+
+                <span class="pagination-current">
+                    صفحه {{ page_obj.number }}
+                    از {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a class="pagination-link"
+                       href="?page={{ page_obj.next_page_number }}">
+                        بعدی
+                    </a>
+
+                    <a class="pagination-link"
+                       href="?page={{ page_obj.paginator.num_pages }}">
+                        انتها
+                    </a>
+                {% else %}
+                    <span class="pagination-link disabled">بعدی</span>
+                    <span class="pagination-link disabled">انتها</span>
+                {% endif %}
+            </nav>
+        {% endif %}
+    </section>
 {% endblock content %}

@@ -1,20 +1,58 @@
+<header class="site-header">
+    <div class="container header-inner">
+
+        <a class="site-brand" href="{% url 'home' %}">
+            اوهانا
+        </a>
+
+        <nav class="site-nav" aria-label="ناوبری اصلی">
+            <a class="nav-link" href="{% url 'home' %}">
+                خانه
+            </a>
+
+            <a class="nav-link" href="{% url 'categories' %}">
+                دسته‌بندی‌ها
+            </a>
+        </nav>
+
+        <div class="header-actions">
+            {% if request.user.is_authenticated %}
+                <a
+                    class="nav-link profile-link"
+                    href="{% url 'profile' request.user.pk %}"
+                >
+                    پروفایل
+                </a>
+            {% else %}
+                <a class="nav-link" href="{% url 'login' %}">
+                    ورود
+                </a>
+
+                <a class="button button-primary"
+                   href="{% url 'signup' %}">
+                    ثبت‌نام
+                </a>
+            {% endif %}
+        </div>
+
+    </div>
+</header>
+
 {% if messages %}
-    <div class="messages">
+    <div class="container messages"
+         role="status"
+         aria-label="پیام‌های سیستم">
+
         {% for message in messages %}
-            <div class="message {% if message.tags %} {{ message.tags }} {% endif %} ">
-                {{ message }}
+            <div
+                class="message{% if message.tags %} {{ message.tags }}{% endif %}"
+                {% if 'error' in message.tags or 'warning' in message.tags %}
+                    role="alert"
+                {% endif %}
+            >
+                <span>{{ message }}</span>
             </div>
         {% endfor %}
+
     </div>
 {% endif %}
-
-<header class="header">
-    <a href="{% url 'home' %}">خانه</a>
-    <a href="{% url 'categories' %}">دسته بندی ها</a>
-    {% if request.user.is_authenticated %}
-        <a href="{% url 'profile' request.user.pk %}">پروفایل</a>
-    {% else %}
-        <a href="{% url 'login' %}">ورود</a>{{ " / " }}
-        <a href="{% url 'signup' %}">ثبت نام</a>
-    {% endif %}
-</header>

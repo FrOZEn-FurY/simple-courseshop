@@ -1,21 +1,54 @@
-{% extends 'base.html' %}
+
+{% extends "base.html" %}
 {% load static %}
 
-{% block head %}
-    <link href="{% static 'css/subscriptions.css' %}" rel="stylesheet" />
-{% endblock head %}
+{% block title %}اشتراک‌ها{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/subscriptions.css' %}">
+{% endblock %}
+
+{% block body_class %}subscriptions-page{% endblock %}
 
 {% block content %}
+<section class="subscriptions-section">
+    <header class="subscriptions-header">
+        <h1 class="page-title">اشتراک‌ها</h1>
+        <p class="page-description">
+            طرح مناسب خود را انتخاب کنید و از امکانات اشتراکی بهره‌مند شوید.
+        </p>
+    </header>
+
     <div class="subscriptions">
         {% for sub in object_list %}
-            <div class="sub">
-                <div>نام: {{ sub.title }}</div>
-                <div>مدت: {{ sub.duration }} روز</div>
-                <div>قیمت: {{ sub.price }} ریال</div>
-                <a href="{% url 'buy-subscription' sub.pk %}">خرید اشتراک</a>
-            </div>
+            <article class="sub">
+                <h2 class="sub-title">{{ sub.title }}</h2>
+
+                <div class="sub-details">
+                    <div class="sub-detail">
+                        <span class="sub-label">مدت اشتراک</span>
+                        <span class="sub-value">{{ sub.duration }} روز</span>
+                    </div>
+
+                    <div class="sub-detail">
+                        <span class="sub-label">قیمت</span>
+                        <strong class="sub-price">
+                            {{ sub.price }} <span>ریال</span>
+                        </strong>
+                    </div>
+                </div>
+
+                <a class="button button-primary sub-purchase"
+                   href="{% url 'buy-subscription' sub.pk %}">
+                    خرید اشتراک
+                </a>
+            </article>
         {% empty %}
-            <div>No items to be shown.</div>
+            <div class="subscriptions-empty">
+                <h2>اشتراکی موجود نیست</h2>
+                <p>در حال حاضر طرحی برای نمایش وجود ندارد.</p>
+            </div>
         {% endfor %}
     </div>
+</section>
 {% endblock content %}

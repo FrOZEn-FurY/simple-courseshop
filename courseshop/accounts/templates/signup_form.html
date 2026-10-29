@@ -1,29 +1,112 @@
-{% extends "base.html" %}
 
-{% block title %}Signup{% endblock title %}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}ثبت‌نام{% endblock %}
 
 {% block head %}
     {{ wizard.form.media }}
 {% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/signup.css' %}">
+{% endblock %}
+
+{% block body_class %}signup-page{% endblock %}
+
 {% block content %}
-    <form action="" method="post">
+<section class="signup-card">
+    <header class="signup-header">
+        <h1 class="signup-title">ایجاد حساب کاربری</h1>
+        <p class="signup-description">
+            اطلاعات موردنیاز را وارد کنید تا ثبت‌نام تکمیل شود.
+        </p>
+    </header>
+
+    <form class="signup-form" action="" method="post">
         {% csrf_token %}
-        <table>
-            {{ wizard.management_form }}
+
+        {{ wizard.management_form }}
+
+        {% if wizard.form.non_field_errors %}
+            <div class="form-errors" role="alert">
+                {{ wizard.form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <div class="signup-fields">
             {% if wizard.form.forms %}
                 {{ wizard.form.management_form }}
+
                 {% for form in wizard.form.forms %}
-                    {{ form.as_table }}
+                    {% if form.non_field_errors %}
+                        <div class="form-errors" role="alert">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    {% for field in form %}
+                        <div class="form-field">
+                            {{ field.label_tag }}
+                            {{ field }}
+
+                            {% if field.help_text %}
+                                <small class="form-help">
+                                    {{ field.help_text }}
+                                </small>
+                            {% endif %}
+
+                            {% for error in field.errors %}
+                                <p class="form-error">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
                 {% endfor %}
             {% else %}
-                {{ wizard.form }}
+                {% for field in wizard.form %}
+                    <div class="form-field">
+                        {{ field.label_tag }}
+                        {{ field }}
+
+                        {% if field.help_text %}
+                            <small class="form-help">
+                                {{ field.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in field.errors %}
+                            <p class="form-error">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
             {% endif %}
-        </table>
-        {% if wizard.steps.prev %}
-            <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">First Step</button>
-            <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Previous Step</button>
-        {% endif %}
-        <input type="submit" value="Submit"/>
+        </div>
+
+        <div class="signup-actions">
+            {% if wizard.steps.prev %}
+                <button class="button button-secondary"
+                        name="wizard_goto_step"
+                        type="submit"
+                        value="{{ wizard.steps.first }}">
+                    مرحله اول
+                </button>
+
+                <button class="button button-secondary"
+                        name="wizard_goto_step"
+                        type="submit"
+                        value="{{ wizard.steps.prev }}">
+                    مرحله قبل
+                </button>
+            {% endif %}
+
+            <button class="button button-primary" type="submit">
+                {% if wizard.steps.next %}
+                    مرحله بعد
+                {% else %}
+                    تکمیل ثبت‌نام
+                {% endif %}
+            </button>
+        </div>
     </form>
-{% endblock %}
+</section>
+{% endblock content %}

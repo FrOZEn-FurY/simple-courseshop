@@ -21,6 +21,7 @@ from formtools.wizard.views import SessionWizardView
 
 from .forms import *
 from .models import User, Subscription
+from posts.models import UserFavorite
 
 
 class LoginView(FormView):
@@ -80,6 +81,9 @@ class ProfileView(LoginRequiredMixin, UpdateView):
             expiration_date = self.request.user.subscription_date_started.astimezone(pytz.timezone("Asia/Tehran")) + timedelta(days=self.request.user.subscription.duration)
             difference = expiration_date - timezone.make_aware(now, pytz.timezone("Asia/Tehran"))
             data['time_remaining'] = difference.days
+
+        data['favorites'] = UserFavorite.objects.filter(user=self.request.user)
+        
         return data
 
 

@@ -2,28 +2,55 @@
 {% load mptt_tags %}
 {% load static %}
 
+{% block title %}دسته‌بندی‌ها{% endblock %}
 
-{% block head %}
-	<link href="{% static 'css/categories.css' %}" rel="stylesheet" />
-{% endblock head %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/categories.css' %}">
+{% endblock %}
+
+{% block body_class %}categories-page{% endblock %}
 
 {% block content %}
-	<div style="--bs-breadcrumb-divider: '->';" aria-label="breadcrumb">
-		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href="{% url 'home' %}">خانه</a></li>
-			<li id="Current-page" class="breadcrumb-item active" aria-current="page">دسته بتدی ها</li>
-		</ol>
-	</div>
-	<ul id="Category">
-		{% recursetree categories %}
-			<li>
-				<a href="{{ node.get_absolute_url }}">{{ node.name }}</a>
-				{% if not node.is_leaf_node %}
-					<ul class="children">
-						{{ children }}
-					</ul>
-				{% endif %}
-			</li>
-		{% endrecursetree %}
-	</ul>
+    <nav class="breadcrumb" aria-label="مسیر صفحه">
+        <ol class="breadcrumb-list">
+            <li class="breadcrumb-item">
+                <a href="{% url 'home' %}">خانه</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                دسته‌بندی‌ها
+            </li>
+        </ol>
+    </nav>
+
+    <section class="page-section">
+        <header class="page-heading">
+            <h1 class="page-title">دسته‌بندی‌ها</h1>
+            <p class="page-description">
+                دسته‌بندی موردنظر خود را انتخاب کنید.
+            </p>
+        </header>
+
+        <div class="category-panel">
+            <ul class="category-tree">
+                {% recursetree categories %}
+                    <li class="category-item">
+                        <a class="category-link"
+                           href="{{ node.get_absolute_url }}">
+                            <span>{{ node.name }}</span>
+                            {% if not node.is_leaf_node %}
+                                <span class="category-indicator"
+                                      aria-hidden="true">+</span>
+                            {% endif %}
+                        </a>
+
+                        {% if not node.is_leaf_node %}
+                            <ul class="category-children">
+                                {{ children }}
+                            </ul>
+                        {% endif %}
+                    </li>
+                {% endrecursetree %}
+            </ul>
+        </div>
+    </section>
 {% endblock content %}

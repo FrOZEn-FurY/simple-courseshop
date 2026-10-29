@@ -1,31 +1,83 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block head %}
-	<link href="{% static 'css/categories.css' %}" rel="stylesheet" />
-{% endblock head %}
+{% block title %}{% for anc in ancestors %}{% if forloop.last %}{{ anc.name }}{% endif %}{% endfor %}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/categories.css' %}">
+{% endblock %}
+
+{% block body_class %}category-posts-page{% endblock %}
 
 {% block content %}
-	<div style="--bs-breadcrumb-divider: '->';" aria-label="breadcrumb">
-		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href="{% url 'home' %}">خانه</a></li>
-			<li class="breadcrumb-item"><a href="{% url 'categories' %}">دسته بندی ها</a></li>
-			{% for anc in ancestors %}
-				{% if not forloop.last %}
-					<li class="breadcrumb-item"><a href="{{ anc.get_absolute_url }}">{{ anc.name }}</a></li>
-				{% else %}
-					<li id="Current-page" class="breadcrumb-item active" aria-current="page">{{ anc.name }}</li>
-				{% endif %}
-			{% endfor %}
-		</ol>
-	</div>
-	<div class="list-group list-group-flush">
-		{% for post in posts %}
-			<a class="list-group-item {% if post.subscription_required %} premium {% endif %}" href="{{ post.get_absolute_url }}">
-				<p>
-					{{ post.title }}
-				</p>
-			</a>
-		{% endfor %}
-	</div>
+    <nav class="breadcrumb" aria-label="مسیر صفحه">
+        <ol class="breadcrumb-list">
+            <li class="breadcrumb-item">
+                <a href="{% url 'home' %}">خانه</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'categories' %}">دسته‌بندی‌ها</a>
+            </li>
+
+            {% for anc in ancestors %}
+                {% if not forloop.last %}
+                    <li class="breadcrumb-item">
+                        <a href="{{ anc.get_absolute_url }}">
+                            {{ anc.name }}
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="breadcrumb-item active"
+                        aria-current="page">
+                        {{ anc.name }}
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ol>
+    </nav>
+
+    <section class="page-section">
+        <header class="page-heading">
+            <h1 class="page-title">
+                {% for anc in ancestors %}
+                    {% if forloop.last %}
+                        {{ anc.name }}
+                    {% endif %}
+                {% endfor %}
+            </h1>
+
+            <p class="page-description">
+                مطالب این دسته‌بندی را مشاهده کنید.
+            </p>
+        </header>
+
+        <div class="post-list">
+            {% for post in posts %}
+                <a
+                    class="post-card{% if post.subscription_required %} post-card-premium{% endif %}"
+                    href="{{ post.get_absolute_url }}"
+                >
+                    <span class="post-card-title">
+                        {{ post.title }}
+                    </span>
+
+                    {% if post.subscription_required %}
+                        <span class="premium-badge">
+                            ویژه اعضا
+                        </span>
+                    {% endif %}
+
+                    <span class="post-card-arrow"
+                          aria-hidden="true">←</span>
+                </a>
+            {% empty %}
+                <div class="empty-state">
+                    <h2>هنوز مطلبی وجود ندارد</h2>
+                    <p>
+                        در حال حاضر مطلبی برای این دسته‌بندی ثبت نشده است.
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
 {% endblock content %}

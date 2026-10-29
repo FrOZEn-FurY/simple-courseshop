@@ -1,0 +1,181 @@
+
+/* ========================================
+   1. Homepage post list
+======================================== */
+
+.home-posts-page .page-section {
+    max-width: 920px;
+}
+
+.home-posts-page .page-heading {
+    margin-bottom: 28px;
+}
+
+.home-posts-page .post-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.home-posts-page .post-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    min-height: 72px;
+    padding: 18px 22px;
+
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+
+    background: var(--color-surface);
+    color: var(--color-text);
+
+    box-shadow: var(--shadow-sm);
+
+    transition:
+        border-color var(--transition-fast),
+        background-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+}
+
+.home-posts-page .post-card:hover {
+    border-color: #c7c9fa;
+    background: #fcfcff;
+    box-shadow: 0 3px 10px rgb(20 30 60 / 5%);
+}
+
+.home-posts-page .post-card-title {
+    flex: 1;
+    min-width: 0;
+
+    font-size: 15px;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+}
+
+.home-posts-page .post-card-arrow {
+    flex-shrink: 0;
+
+    color: #9ba2b3;
+    font-size: 20px;
+
+    transition:
+        color var(--transition-fast),
+        transform var(--transition-fast);
+}
+
+.home-posts-page .post-card:hover .post-card-arrow {
+    color: var(--color-primary);
+    transform: translateX(-3px);
+}
+
+
+/* ========================================
+   2. Premium posts
+======================================== */
+
+.home-posts-page .post-card-premium {
+    border-inline-start: 3px solid #d6a23c;
+}
+
+.home-posts-page .premium-badge {
+    flex-shrink: 0;
+
+    padding: 4px 10px;
+
+    border: 1px solid #f1dfb4;
+    border-radius: var(--radius-sm);
+
+    color: #8a6114;
+    background: #fff9e9;
+
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+
+/* ========================================
+   3. Empty state
+======================================== */
+
+.home-posts-page .empty-state {
+    padding: 40px 24px;
+
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-lg);
+
+    text-align: center;
+    background: var(--color-surface);
+}
+
+.home-posts-page .empty-state h2 {
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+
+.home-posts-page .empty-state p {
+    margin: 0;
+    color: var(--color-text-muted);
+}
+
+
+/* ========================================
+   4. Pagination
+======================================== */
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    margin-top: 28px;
+    padding-top: 20px;
+
+    border-top: 1px solid var(--color-border);
+}
+
+.pagination-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 38px;
+    padding: 7px 13px;
+
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+
+    color: var(--color-text);
+    background: var(--color-surface);
+
+    font-size: 13px;
+
+    transition:
+        color var(--transition-fast),
+        background-color var(--transition-fast),
+        border-color var(--transition-fast);
+}
+
+.pagination-link:not(.disabled):hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: var(--color-primary-soft);
+}
+
+.pagination-link.disabled {
+    color: #a7adba;
+    background: #f3f4f7;
+    cursor: not-allowed;
+}
+
+.pagination-current {
+    padding-inline: 10px;
+
+    color: var(--color-text-muted);
+    font-size: 13px;
+    text-align: center;
+}

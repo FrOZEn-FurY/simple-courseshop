@@ -1,21 +1,137 @@
-{% extends "base.html" %}
 
-{% block title %}Login{% endblock title %}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}پروفایل کاربری{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
+
+{% block body_class %}profile-page{% endblock %}
 
 {% block content %}
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Submit" />
-    </form>
-    <div style="display: flex; flex-direction: column; padding: 0.5rem; margin: 0.5rem; gap: 0.25rem;">
-        <a href="{% url 'change-password' %}">عوض کردن پسوورد</a>
-        <a href="{% url 'logout' %}">خروج</a>
+<div class="profile-layout">
+    <header class="page-heading">
+        <h1 class="page-title">پروفایل کاربری</h1>
+        <p class="page-description">
+            اطلاعات حساب، وضعیت اشتراک و مطالب موردعلاقه خود را مدیریت کنید.
+        </p>
+    </header>
+
+    <div class="profile-grid">
+        <section class="profile-panel profile-edit-panel">
+            <div class="panel-heading">
+                <h2 class="panel-title">اطلاعات حساب</h2>
+                <p class="panel-description">
+                    اطلاعات موردنیاز را ویرایش کنید.
+                </p>
+            </div>
+
+            <form class="profile-form" action="" method="post">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="form-errors" role="alert">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                {% for field in form %}
+                    <div class="form-field">
+                        {{ field.label_tag }}
+                        {{ field }}
+
+                        {% if field.help_text %}
+                            <small class="form-help">{{ field.help_text }}</small>
+                        {% endif %}
+
+                        {% for error in field.errors %}
+                            <p class="form-error">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                <button class="button button-primary" type="submit">
+                    ذخیره تغییرات
+                </button>
+            </form>
+
+            <div class="profile-actions">
+                <a class="button button-secondary"
+                   href="{% url 'change-password' %}">
+                    تغییر رمز عبور
+                </a>
+
+                <a class="button button-danger"
+                   href="{% url 'logout' %}">
+                    خروج از حساب
+                </a>
+            </div>
+        </section>
+
+        <section class="profile-panel subscription-panel">
+            <div class="panel-heading">
+                <h2 class="panel-title">اشتراک من</h2>
+            </div>
+
+            {% if time_remaining %}
+                <div class="subscription-status subscription-active">
+                    <span class="status-indicator" aria-hidden="true"></span>
+                    <span>اشتراک فعال</span>
+                </div>
+
+                <div class="subscription-detail">
+                    <span class="detail-label">اشتراک فعلی</span>
+                    <strong class="detail-value">
+                        {{ request.user.subscription.title }}
+                    </strong>
+                </div>
+
+                <div class="subscription-detail">
+                    <span class="detail-label">زمان باقی‌مانده</span>
+                    <strong class="detail-value">
+                        {{ time_remaining }}
+                    </strong>
+                </div>
+            {% else %}
+                <div class="subscription-status subscription-inactive">
+                    اشتراک فعالی ندارید.
+                </div>
+
+                <p class="subscription-description">
+                    برای دسترسی به امکانات اشتراکی، یکی از طرح‌ها را انتخاب کنید.
+                </p>
+
+                <a class="button button-primary subscription-action"
+                   href="{% url 'subscriptions' %}">
+                    مشاهده اشتراک‌ها
+                </a>
+            {% endif %}
+        </section>
+
+        <section class="profile-panel favorites-panel">
+            <div class="panel-heading">
+                <h2 class="panel-title">علاقه‌مندی‌ها</h2>
+                <p class="panel-description">
+                    مطالبی که برای دسترسی سریع‌تر ذخیره کرده‌اید.
+                </p>
+            </div>
+
+            <div class="favorites-list">
+                {% for fav in favorites %}
+                    <a class="favorite-item"
+                       href="{% url 'post-detail' fav.post.category.slug fav.post.pk %}">
+                        <span class="favorite-title">{{ fav.post.title }}</span>
+                        <span class="favorite-arrow" aria-hidden="true">←</span>
+                    </a>
+                {% empty %}
+                    <div class="empty-state">
+                        <p>هنوز مطلبی را به علاقه‌مندی‌های خود اضافه نکرده‌اید.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
     </div>
-    {% if time_remaining %}
-        <div>{{ time_remaining }} از اشتراک شما باقی مانده</div>
-        <div>نوع اشتراک: {{ request.user.subscription.title }}</div>
-    {% else %}
-        <div>شما اشتراک فعالی ندارید. <a href="{% url 'subscriptions' %}">خرید اشتراک</a></div>
-    {% endif %}
+</div>
 {% endblock content %}

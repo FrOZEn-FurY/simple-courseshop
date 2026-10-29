@@ -1,5 +1,25 @@
-{% extends 'base.html' %}
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}نتیجه عملیات{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block body_class %}callback-page{% endblock %}
 
 {% block content %}
-    <h4>{{ message }}</h4>
+    <section class="status-card">
+        <div class="status-icon" aria-hidden="true">i</div>
+
+        <h1 class="status-title">نتیجه عملیات</h1>
+
+        <p class="status-message">{{ message }}</p>
+
+        <a href="{% url 'home' %}" class="button button-primary">
+            بازگشت به صفحه اصلی
+        </a>
+    </section>
 {% endblock content %}

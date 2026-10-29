@@ -1,0 +1,337 @@
+
+.profile-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.page-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.page-title {
+    margin: 0;
+    color: var(--color-text);
+    font-size: 1.8rem;
+    line-height: 1.5;
+}
+
+.page-description,
+.panel-description {
+    margin: 0;
+    color: var(--color-text-muted);
+    line-height: 1.8;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(260px, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.profile-panel {
+    min-width: 0;
+    padding: 24px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg, 16px);
+    box-shadow: var(--shadow-sm);
+}
+
+.panel-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 22px;
+}
+
+.panel-title {
+    margin: 0;
+    color: var(--color-text);
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+.profile-form,
+.profile-form .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.profile-form {
+    gap: 18px;
+}
+
+.profile-form label {
+    color: var(--color-text);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.profile-form input,
+.profile-form select,
+.profile-form textarea {
+    width: 100%;
+    min-width: 0;
+    padding: 11px 12px;
+    color: var(--color-text);
+    font: inherit;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md, 8px);
+    outline: none;
+    transition: border-color var(--transition-fast),
+                box-shadow var(--transition-fast);
+}
+
+.profile-form textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.profile-form input:focus,
+.profile-form select:focus,
+.profile-form textarea:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-soft);
+}
+
+.profile-form input[type="checkbox"],
+.profile-form input[type="radio"] {
+    width: auto;
+    accent-color: var(--color-primary);
+}
+
+.profile-form .form-help {
+    color: var(--color-text-muted);
+    font-size: 0.82rem;
+    line-height: 1.7;
+}
+
+.profile-form .form-error,
+.profile-form .form-errors {
+    margin: 0;
+    color: var(--color-error);
+    font-size: 0.85rem;
+    line-height: 1.7;
+}
+
+.profile-form .button {
+    align-self: flex-start;
+    margin-top: 4px;
+}
+
+.profile-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-top: 20px;
+    margin-top: 24px;
+    border-top: 1px solid var(--color-border);
+}
+
+.button-secondary,
+.button-danger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 10px 14px;
+    font: inherit;
+    font-size: 0.9rem;
+    text-decoration: none;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md, 8px);
+    transition: background var(--transition-fast),
+                border-color var(--transition-fast);
+}
+
+.button-secondary {
+    color: var(--color-text);
+    background: var(--color-surface);
+}
+
+.button-secondary:hover {
+    background: var(--color-surface-hover);
+}
+
+.button-danger {
+    color: var(--color-error);
+    background: var(--color-surface);
+    border-color: var(--color-error-border);
+}
+
+.button-danger:hover {
+    background: var(--color-error-background);
+}
+
+.subscription-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.subscription-panel .panel-heading {
+    margin-bottom: 0;
+}
+
+.subscription-status {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 8px;
+    padding: 7px 11px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.subscription-active {
+    color: var(--color-success);
+    background: var(--color-success-background);
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    flex-shrink: 0;
+    background: currentColor;
+    border-radius: 50%;
+}
+
+.subscription-inactive {
+    color: var(--color-text-muted);
+    background: var(--color-surface-hover);
+}
+
+.subscription-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.subscription-detail:last-of-type {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.detail-label {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+}
+
+.detail-value {
+    color: var(--color-text);
+    font-size: 1rem;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.subscription-description {
+    margin: 0;
+    color: var(--color-text-muted);
+    line-height: 1.8;
+}
+
+.subscription-action {
+    align-self: flex-start;
+    text-decoration: none;
+}
+
+.favorites-panel {
+    grid-column: 1 / -1;
+}
+
+.favorites-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.favorite-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 15px 4px;
+    color: var(--color-text);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-border);
+    transition: color var(--transition-fast);
+}
+
+.favorite-item:first-child {
+    padding-top: 0;
+}
+
+.favorite-item:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.favorite-item:hover {
+    color: var(--color-primary);
+}
+
+.favorite-title {
+    min-width: 0;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+}
+
+.favorite-arrow {
+    flex-shrink: 0;
+    color: var(--color-text-muted);
+}
+
+.favorite-item:hover .favorite-arrow {
+    color: var(--color-primary);
+}
+
+.empty-state {
+    padding: 20px;
+    color: var(--color-text-muted);
+    text-align: center;
+    background: var(--color-background);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-md, 8px);
+}
+
+.empty-state p {
+    margin: 0;
+    line-height: 1.8;
+}
+
+@media (max-width: 800px) {
+    .profile-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .favorites-panel {
+        grid-column: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-panel {
+        padding: 18px;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+    }
+
+    .profile-actions {
+        flex-direction: column;
+    }
+
+    .profile-actions .button-secondary,
+    .profile-actions .button-danger {
+        width: 100%;
+    }
+}

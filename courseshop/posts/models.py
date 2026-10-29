@@ -49,7 +49,7 @@ class PostData(models.Model):
     )
 
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_files')
-    file = models.FileField(upload_to='uploads/')
+    file = models.ImageField(upload_to='uploads/')
     file_type = models.CharField(choices=FILE_TYPE, default='P')
 
 
