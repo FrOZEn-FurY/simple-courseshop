@@ -43,7 +43,9 @@ INSTALLED_APPS = [
 
     "azbankgateways",
     "phonenumber_field",
-    "ckeditor_uploader",
+    'ckeditor',
+    'ckeditor_uploader',
+    'mptt',
 
     "accounts.apps.AccountsConfig",
     "posts.apps.PostsConfig",
@@ -132,15 +134,13 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
-
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
     ]
 
 MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 
 # Email
@@ -154,8 +154,53 @@ MAILERS = {
 
 AUTH_USER_MODEL = 'accounts.User'
 
-CKEDITOR_BASEPATH = "/my_static/ckeditor/ckeditor/"
+ALLOW_UNICODE_SLUGS = True
+
 CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_BROWSE_SHOW_DIRS = True
+CKEDITOR_IMAGE_BACKEND = 'ckeditor_uploader.backends.PillowBackend'
+CKEDITOR_ALLOW_NONIMAGE_FILES = True
+CKEDITOR_BASEPATH = f"{STATIC_URL}ckeditor/ckeditor/"
+CKEDITOR_RESTRICT_BY_DATE = True
+CKEDITOR_THUMBNAIL_SIZE = (800, 600)
+CKEDITOR_IMAGE_QUALITY = 70
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+    },
+    'Comments': {
+        'toolbar': [
+            {
+                'name': 'Clipboard',
+                'items': ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']
+            },
+            {
+                'name': 'Editing',
+                'items': ['Find', 'Replace', '-', 'SelectAll']
+            },
+            {
+                'name': 'BasicStyles',
+                'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']
+            },
+            {
+                'name': 'styles',
+                'items': ['Styles', 'Format', 'Font', 'FontSize']
+            },
+            {
+                'name': 'colors',
+                'items': ['TextColor', 'BGColor']
+            },
+            {
+                'name': 'paragraph',
+                'items': [
+                    'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
+                    'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl',
+                    'Language'
+                ]
+            },
+        ],
+    }
+}
 
 SITE_ID = 1
 DEFAULT_PROTOCOL = "http"

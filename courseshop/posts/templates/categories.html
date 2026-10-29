@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load mptt_tags %}
+{% load static %}
+
+
+{% block head %}
+	<link href="{% static 'css/categories.css' %}" rel="stylesheet" />
+{% endblock head %}
+
+{% block content %}
+	<div style="--bs-breadcrumb-divider: '->';" aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a href="{% url 'home' %}">خانه</a></li>
+			<li id="Current-page" class="breadcrumb-item active" aria-current="page">دسته بتدی ها</li>
+		</ol>
+	</div>
+	<ul id="Category">
+		{% recursetree categories %}
+			<li>
+				<a href="{{ node.get_absolute_url }}">{{ node.name }}</a>
+				{% if not node.is_leaf_node %}
+					<ul class="children">
+						{{ children }}
+					</ul>
+				{% endif %}
+			</li>
+		{% endrecursetree %}
+	</ul>
+{% endblock content %}

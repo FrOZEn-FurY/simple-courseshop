@@ -128,7 +128,7 @@ class CallbackGatewayView(TemplateView):
         return render(request, self.template_name, context={ 'message': "پرداخت با شکست مواجه شده است. اگر پول کم شده است ظرف مدت ۴۸ ساعت پول به حساب شما بازخواهد گشت." })
 
 
-class BuySubscriptionView(View):
+class BuySubscriptionView(LoginRequiredMixin, View):
     def get(self, request, pk):
         sub = Subscription.objects.get(pk=pk)
         factory = bankfactories.BankFactory()

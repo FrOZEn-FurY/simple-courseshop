@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load mptt_tags %}
+{% load static %}
+
+{% block head %}
+	<link href='{% static "css/post.css" %}' rel="stylesheet" />
+	<link href="{% static 'css/categories.css' %}" rel="stylesheet" />
+{% endblock head %}
+
+{% block content %}
+    <div style="--bs-breadcrumb-divider: '->';" aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a href="{% url 'home' %}">خانه</a></li>
+			<li class="breadcrumb-item"><a href="{% url 'categories' %}">دسته بندی ها</a></li>
+            {% for anc in ancestors %}
+			    <li class="breadcrumb-item"><a href="{{ anc.get_absolute_url }}">{{ anc.name }}</a></li>
+            {% endfor %}
+			<li id="Current-page" class="breadcrumb-item active" aria-current="page">{{ post.title }}</li>
+		</ol>
+	</div>
+	<div class="card" style="display: inline-block; float: right;">
+		<h2 class="card-header">پست های مرتبط</h2>
+		<ul class="card-body">
+			{% for post in recent %}
+				<li>
+					<a href="{{ post.get_absolute_url }}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+						{{ post.author }}: {{ post.title }}
+					</a>
+				</li>
+			{% endfor %}
+		</ul>
+	</div>
+	{% if liked %}
+		<a class="btn btn-danger button-link-design mb-2 position-relative" href="{% url 'add-to-favorite' post.pk %}">
+			حذف از علاقه مندی
+		</a>
+	{% else %}
+		<a class="btn btn-info button-link-design mb-2 position-relative" href="{% url 'add-to-favorite' post.pk %}">
+			افزودن به علاقه مندی
+		</a>
+	{% endif %}<br/>
+	<h2 style="display: inline-block; text-align: center; margin-left: 460px;">{{ post.title }}</h2>
+    <div class="card" style="display: inline-block; width: 65%;">
+        <p class="card-body">
+            {{ post.body|safe }}
+        </p>
+    </div><br/><br/><br/>
+	<hr/>
+	<h1 style="text-align: center;">نظر ها</h1>
+	<ul>
+		{% for comment in comments %}
+			<li class="button-link-design card"
+				style="margin-right: 20px;">
+					<h3 class="card-body">{{ comment.author }}
+						<span style="opacity: 50%; font-size: 15px;"> Updated at: {{ comment.date_updated|date:"M jS H:i:s" }}</span>
+					</h3>
+					<p class="card-text" style="padding-left: 5px;">{{ comment.body|safe }}</p>
+			</li><br/>
+		{% empty %}
+			<li class="button-link-design card"
+				style="margin-right: 20px;">
+					نظری ثبت نشده است.
+			</li><br/>
+		{% endfor %}
+	</ul>
+	<hr/>
+	<div class="button-link-design" style="text-align: center;">
+		<h2>نظر خود را ثبت کنید:</h2>
+		<form action="{% url 'add-comment' post.pk %}" method="post">
+			{% csrf_token %}
+			{{ comment_form.as_p }}
+			<input type="submit" value="ثبت نظر" />
+		</form>
+	</div>
+	<br/><br/>
+{% endblock content %}

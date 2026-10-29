@@ -1,17 +1,45 @@
 from django.db import models
+from django.urls import reverse_lazy
 
-from accounts.models import Subscription
+from mptt.models import MPTTModel
+from mptt.fields import TreeForeignKey
 
+from ckeditor.fields import RichTextField
 
-class Categoery(models.Model):
-    title = models.CharField(max_length=100)
+from accounts.models import User
+
+class Category(MPTTModel):
+    name = models.CharField(
+        max_length=200,
+        unique=True,
+    )
+    slug = models.SlugField(
+        max_length=300,
+        unique=True,
+        null=True,
+        blank=True,
+        allow_unicode=True
+    )
+    parent = TreeForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='category_parent'
+    )
+
+    def get_absolute_url(self):
+        return reverse_lazy('category-posts', args=(self.slug,))
 
 
 class Post(models.Model):
     title = models.CharField(max_length=100)
-    categoery = models.ForeignKey(Categoery, on_delete=models.CASCADE, related_name='posts')
-    subscription_required = models.ForeignKey(Subscription, on_delete=models.CASCADE, related_name='posts')
-    body = models.TextField()
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category_posts')
+    subscription_required = models.BooleanField(default=False)
+    body = RichTextField()
+
+    def get_absolute_url(self):
+        return reverse_lazy('post-detail', args=(self.category.slug, self.pk))
 
 
 class PostData(models.Model):
@@ -26,5 +54,13 @@ class PostData(models.Model):
 
 
 class Comment(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
-    body = models.TextField()
+    body = RichTextField()
+    date_updated = models.DateTimeField(auto_now=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+
+class UserFavorite(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='favorited')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')

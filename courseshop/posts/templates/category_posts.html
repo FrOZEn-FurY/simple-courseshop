@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+	<link href="{% static 'css/categories.css' %}" rel="stylesheet" />
+{% endblock head %}
+
+{% block content %}
+	<div style="--bs-breadcrumb-divider: '->';" aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a href="{% url 'home' %}">خانه</a></li>
+			<li class="breadcrumb-item"><a href="{% url 'categories' %}">دسته بندی ها</a></li>
+			{% for anc in ancestors %}
+				{% if not forloop.last %}
+					<li class="breadcrumb-item"><a href="{{ anc.get_absolute_url }}">{{ anc.name }}</a></li>
+				{% else %}
+					<li id="Current-page" class="breadcrumb-item active" aria-current="page">{{ anc.name }}</li>
+				{% endif %}
+			{% endfor %}
+		</ol>
+	</div>
+	<div class="list-group list-group-flush">
+		{% for post in posts %}
+			<a class="list-group-item {% if post.subscription_required %} premium {% endif %}" href="{{ post.get_absolute_url }}">
+				<p>
+					{{ post.title }}
+				</p>
+			</a>
+		{% endfor %}
+	</div>
+{% endblock content %}
