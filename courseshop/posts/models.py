@@ -49,7 +49,8 @@ class PostData(models.Model):
     )
 
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_files')
-    file = models.ImageField(upload_to='uploads/')
+    file = models.ImageField(upload_to='uploads/', null=True, blank=True)
+    video_url = models.URLField(null=True, blank=True)
     file_type = models.CharField(choices=FILE_TYPE, default='P')
 
 

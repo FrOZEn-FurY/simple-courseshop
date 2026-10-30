@@ -8,7 +8,7 @@ from azbankgateways.models.enum import PaymentStatus
 class Token(models.Model):
     value = models.CharField(max_length=5)
     date_created = models.DateTimeField(auto_now_add=True)
-    phone_number = PhoneNumberField(unique=True)
+    phone_number = PhoneNumberField()
 
 
 class Subscription(models.Model):

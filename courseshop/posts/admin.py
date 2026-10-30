@@ -3,14 +3,15 @@ from django.contrib import admin
 from mptt.admin import MPTTModelAdmin
 
 from .models import *
-from .forms import PostAdminForm
+from .forms import PostDataAdminFormset
 
-class PostDataInline(admin.TabularInline):
+
+class PostDataInline(admin.StackedInline):
     model = PostData
+    formset = PostDataAdminFormset
 
 
 class PostAdmin(admin.ModelAdmin):
-    form = PostAdminForm
     fieldsets = [
         ("Post", { "fields": ["title", "category", "subscription_required", "body"], "description": "The core data of a post." }),
     ]

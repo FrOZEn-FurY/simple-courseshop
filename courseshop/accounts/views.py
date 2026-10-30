@@ -52,13 +52,11 @@ class SignupWizard(SessionWizardView):
     def get_form_initial(self, step):
         initial = {}
 
-        if step == '0':
-            self.request.session['phone_number'] = self.form_list[0].cleaned_data['phone_number']
-        if step == '1':
-            initial['phone_number'] = self.request.session['phone_number']
-            del self.request.session['phone_number']
+        if step == '1' and self.request.session['wizard_signup_wizard']['step_data'].get('0', None):
+            initial['phone_number'] = self.request.session['wizard_signup_wizard']['step_data']['0']['0-phone_number'][0]
 
         return initial
+    
 
     def done(self, form_list, **kwargs):
         password = form_list[2].cleaned_data['password']

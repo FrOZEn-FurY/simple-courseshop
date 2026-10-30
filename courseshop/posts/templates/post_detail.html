@@ -39,6 +39,11 @@
         <article class="article-card">
             <header class="article-header">
                 <h1 class="article-title">{{ post.title }}</h1>
+                {% if post.subscription_required %}
+                    <span class="premium-badge">
+                        ویژه اعضا
+                    </span>
+                {% endif %}
 
                 <div class="article-actions">
                     {% if liked %}
@@ -69,7 +74,7 @@
 
                     <div class="media-list">
                         {% for file in files %}
-                            {% if file.type == "Video" or file.type == "VIDEO" or file.type == "V" %}
+                            {% if file.file_type == "V" %}
                                 {% if file.video_url %}
                                     <div class="media-item">
                                         <div class="video-frame">
@@ -85,12 +90,12 @@
                                     </div>
                                 {% endif %}
 
-                            {% elif file.type == "Picture" or file.type == "PICTURE" or file.type == "P" %}
-                                {% if file.picture %}
+                            {% elif file.file_type == "P" %}
+                                {% if file.file %}
                                     <figure class="media-item">
                                         <img
                                             class="article-image"
-                                            src="{{ file.picture.url }}"
+                                            src="{{ file.file.url }}"
                                             alt="{{ post.title }}"
                                             loading="lazy"
                                         >
