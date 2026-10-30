@@ -141,6 +141,7 @@ class CallbackGatewayView(TemplateView):
             if not last_transaction or last_transaction.status == PaymentStatus.COMPLETE:
                 return render(request, self.template_name, context={ 'message': "در فرایند پرداخت مشکلی به وجود آماده است. لطفا با پشتیبانی تماس بگیرید." })
             request.user.subscription = last_transaction.subscription
+            request.user.subscription_date_started = timezone.now()
             request.user.save()
             return render(request, self.template_name, context={ 'message': "پرداخت با موفقیت انجام شد." })
     
