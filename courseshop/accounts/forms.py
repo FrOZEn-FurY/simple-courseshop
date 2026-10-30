@@ -33,8 +33,9 @@ class TokenForm(forms.Form):
 
     def clean(self):
         cleaned_data = super(TokenForm, self).clean()
+        phone_number = self.initial['phone_number']
         try:
-            db_token = Token.objects.get(value=self.cleaned_data['token'])
+            db_token = Token.objects.get(value=self.cleaned_data['token'], phone_number=phone_number)
             time_differnece = timezone.datetime.now() - timedelta(minutes=2)
             print(timezone.make_aware(time_differnece), db_token.date_created.astimezone(pytz.timezone('Asia/Tehran')))
             if timezone.make_aware(time_differnece) > db_token.date_created.astimezone(pytz.timezone('Asia/Tehran')):

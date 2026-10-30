@@ -13,7 +13,7 @@ load_dotenv(settings.BASE_DIR / '.env')
 def send_otp(phone_number):
     s = shortuuid.ShortUUID(alphabet='0123456789')
     token = s.random(5)
-    Token.objects.create(value=token)
+    Token.objects.create(value=token, phone_number=phone_number.as_e164)
     url = 'https://api.sms.ir/v1/send/verify'
     data = {
         "mobile": phone_number.as_e164,

@@ -16,11 +16,12 @@ from django.utils import timezone
 from django.http import Http404
 
 from azbankgateways import models as bank_models, default_settings as settings, bankfactories
+from azbankgateways.models.enum import PaymentStatus
 
 from formtools.wizard.views import SessionWizardView
 
 from .forms import *
-from .models import User, Subscription
+from .models import User, Subscription, TransactionHistory
 from posts.models import UserFavorite
 
 
@@ -47,6 +48,17 @@ class LoginView(FormView):
 class SignupWizard(SessionWizardView):
     form_list = [PhoneNumberForm, TokenForm, SignupForm]
     template_name = "signup_form.html"
+
+    def get_form_initial(self, step):
+        initial = {}
+
+        if step == '0':
+            self.request.session['phone_number'] = self.form_list[0].cleaned_data['phone_number']
+        if step == '1':
+            initial['phone_number'] = self.request.session['phone_number']
+            del self.request.session['phone_number']
+
+        return initial
 
     def done(self, form_list, **kwargs):
         password = form_list[2].cleaned_data['password']
@@ -127,6 +139,11 @@ class CallbackGatewayView(TemplateView):
             raise Http404
     
         if bank_record.is_success:
+            last_transaction = TransactionHistory.objects.filter(user=request.user).order_by("date_created").first()
+            if not last_transaction or last_transaction.status == PaymentStatus.COMPLETE:
+                return render(request, self.template_name, context={ 'message': "در فرایند پرداخت مشکلی به وجود آماده است. لطفا با پشتیبانی تماس بگیرید." })
+            request.user.subscription = last_transaction.subscription
+            request.user.save()
             return render(request, self.template_name, context={ 'message': "پرداخت با موفقیت انجام شد." })
     
         return render(request, self.template_name, context={ 'message': "پرداخت با شکست مواجه شده است. اگر پول کم شده است ظرف مدت ۴۸ ساعت پول به حساب شما بازخواهد گشت." })
@@ -134,12 +151,22 @@ class CallbackGatewayView(TemplateView):
 
 class BuySubscriptionView(LoginRequiredMixin, View):
     def get(self, request, pk):
+        if request.user.subscription:
+            messages.error(request, "You already have a subscription.")
+            return redirect('home')
         sub = Subscription.objects.get(pk=pk)
         factory = bankfactories.BankFactory()
         bank = factory.create()
         bank.set_request(request)
         bank.set_amount(sub.price)
         bank.set_client_callback_url(reverse('callback-gateway'))
+        bank.set_custom_data({"sub_id": sub.pk})
         bank.ready()
-    
+
+        last_transaction = TransactionHistory.objects.filter(user=request.user, subscription=sub).order_by("date_created").first()
+        if (not last_transaction  
+                or last_transaction.status != PaymentStatus.COMPLETE
+                or last_transaction.date_created.astimezone(pytz.timezone("Asia/Tehran")) < timezone.make_aware(timezone.now() - timedelta(minutes=15))):
+            TransactionHistory.objects.create(user=request.user, subscription=sub)
+        
         return bank.redirect_gateway()
