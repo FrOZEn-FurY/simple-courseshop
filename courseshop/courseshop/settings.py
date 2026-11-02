@@ -214,10 +214,10 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 CELERY_BEAT_SCHEDULE = {
     'subscription-cleanup': {
         'task': 'accounts.tasks.remove_subscriptions',
-        'schedule': crontab(hour=13, minute=56),
+        'schedule': crontab(hour=0, minute=0),
     },
     'token-cleanup': {
         'task': 'accounts.tasks.remove_tokens',
-        'schedule': crontab(hour=13, minute=56),
+        'schedule': crontab(hour=0, minute=0),
     },
 }
